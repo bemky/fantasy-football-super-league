@@ -1,0 +1,16 @@
+<div class="container pad-top-4x">
+    <table class="uniformTable">
+        <% @data['fantasy_content']['league']['standings']['teams']["team"].each_with_index do |team, i| %>
+            <tr>
+                <td><%= i+1 %></td>
+                <td>
+                    <div class="uniformThumb round overflow-hidden width-30-px height-30-px">
+                        <img src="<%= team["team_logos"]["team_logo"]["url"] %>">
+                    </div>
+                </td>
+                <td><%= team["name"] %></td>
+                <td><%= team["team_points"]["total"] %></td>
+            </tr>
+        <% end %>
+    </table>
+</div>
