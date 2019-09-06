@@ -43,6 +43,7 @@ class ApplicationController < ActionController::Base
           logo: team['team_logos']['team_logo']['url'],
           id: team['team_id'],
           league_id: league['league_id'],
+          league: league['name'],
           points: team['team_points']['total'].to_i,
           manager: team['managers']['manager'].kind_of?(Array) ? team['managers']['manager'].map do |manager|
             manager.try(:[], 'nickname')

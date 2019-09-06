@@ -2,7 +2,7 @@
     <div class="text-center margin-bottom-4x">
         <%= image_tag('logo.png', class:'inline-block width-200-px height-auto') %>
     </div>
-    <table class="uniformTable">
+    <table class="uniformTable tight-more">
         <tr>
             <th>Rank</th>
             <th> </th>
@@ -10,19 +10,29 @@
             <th>Manager</th>
             <th>Season Total</th>
             <th>Week <%= @week_number %></th>
+            <th>League</th>
         </tr>
         <% @standings.each_with_index do |team, i| %>
             <tr>
-                <td><%= i+1 %></td>
+                <td class="text-bold text-2x text-right"><%= i+1 %></td>
                 <td>
                     <div class="uniformThumb round overflow-hidden width-30-px height-30-px">
                         <img src="<%= team[:logo] %>">
                     </div>
                 </td>
-                <td><%= team[:name] %></td>
+                <td>
+                    <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>/<%= team[:id] %>">
+                    <%= team[:name] %>
+                    </a>
+                </td>
                 <td><%= team[:manager] %>
                 <td><%= team[:points] %></td>
                 <td class="text-small text-bold text-green-dark">+<%= team[:week_points] %></td>
+                <td>
+                    <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>">
+                        <%= team[:league] %>
+                    </a>
+                </td>
             </tr>
         <% end %>
     </table>
