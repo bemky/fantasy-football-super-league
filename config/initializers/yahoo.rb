@@ -90,10 +90,18 @@ class Yahoo < HTTP::Connection
   attr_reader :client_id, :client_secret, :oauth_url, :api_url
   
   def initialize
-    @client_id = Rails.application.secrets[:yahoo].try(:[], :client_id)
-    @client_secret = Rails.application.secrets[:yahoo].try(:[], :client_secret)
-    @oauth_url = Rails.application.secrets[:yahoo].try(:[], :oauth_url)
-    @host = URI.parse(Rails.application.secrets[:yahoo].try(:[], :api_url))
+    if Rails.env == 'production'
+      @client_id = ENV['client_id']
+      @client_secret = ENV['client_secret']
+      @oauth_url = ENV['oauth_url']
+      @host = URI.parse(ENV['api_url'])
+    else
+      @client_id = Rails.application.secrets[:yahoo].try(:[], :client_id)
+      @client_secret = Rails.application.secrets[:yahoo].try(:[], :client_secret)
+      @oauth_url = Rails.application.secrets[:yahoo].try(:[], :oauth_url)
+      @host = URI.parse(Rails.application.secrets[:yahoo].try(:[], :api_url))
+    end
+    
   end
   
   def oauth_url
