@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
           id: team['team_id'],
           league_id: league['league_id'],
           league: league['name'],
-          points: team['team_points']['total'].to_i,
+          points: team['team_points']['total'].to_f,
           manager: manager(team, league)
         }
       end
@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
       league['scoreboard']['matchups']['matchup'].each do |matchup|
         matchup['teams']['team'].each do |team|
           t = teams.find{|x| x[:id] == team["team_id"]}
-          t[:week_points] = team['team_points']['total'].to_i
+          t[:week_points] = team['team_points']['total'].to_f
         end
       end
       teams
