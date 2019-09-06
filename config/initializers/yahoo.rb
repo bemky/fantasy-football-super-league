@@ -105,7 +105,6 @@ class Yahoo < HTTP::Connection
   end
   
   def oauth_url
-    
     @oauth_url + "/oauth2/request_auth?" + {
       client_id: @client_id,
       redirect_uri: Rails.application.config.root_url,
@@ -119,12 +118,13 @@ class Yahoo < HTTP::Connection
     Net::HTTP.start(URI.parse(@oauth_url).host, 443, use_ssl: true) do |http|
       request = Net::HTTP::Post.new('/oauth2/get_token')
       
-      request.set_form_data(params.merge({
+      request.set_form_data({
         client_id:      @client_id,
         client_secret:  @client_secret,
         redirect_uri: Rails.application.config.root_url,
         grant_type: 'authorization_code'
-      }))
+      }.merge(params))
+      
       http.request(request) do |response|
         case response
         when Net::HTTPSuccess
