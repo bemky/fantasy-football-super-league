@@ -33,9 +33,6 @@ class ApplicationController < ActionController::Base
   def index
     response = Yahoo.get('/league/390.l.1101180/standings', session[:access_token]);
     @data = Hash.from_xml(response)
-    puts "*"*80
-    pp @data
-    puts "*"*80
     
   end
   
