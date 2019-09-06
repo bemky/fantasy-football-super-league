@@ -15,6 +15,8 @@ require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
+
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -23,6 +25,10 @@ module SuperLeague2
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+    
+    Raven.configure do |config|
+      config.dsn = 'https://78eaf77e5cc7444287764538e14b2a56:45405a58f34b41e48ff20318f8c7ee7b@sentry.io/1554464'
+    end
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
