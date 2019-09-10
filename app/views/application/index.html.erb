@@ -1,7 +1,43 @@
-<div class="container pad-top-4x">
+<div class="container pad-v-4x">
     <div class="text-center margin-bottom-4x">
         <%= image_tag('logo.png', class:'inline-block width-200-px height-auto') %>
     </div>
+    
+    <h1 class="margin-none text-center">#1 Seeds</h1>
+    <div class="grid grid-nest">
+        <% @ones.each_with_index do |team, i| %>
+            <div class="col-6 col-12-sm">
+                <div class="grid uniformCard pad-v">
+                    <div class="col">
+                        <div class="uniformThumb round overflow-hidden width-60-px height-60-px">
+                            <img src="<%= team[:logo] %>">
+                        </div>
+                    </div>
+                    <div class="col-fill">
+                        <div class="text-bold">
+                            <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>/<%= team[:id] %>">
+                            <%= team[:name] %>
+                            </a>
+                        </div>
+                        <div class="">
+                            <%= team[:manager] %>
+                        </div>
+                        <div class="">
+                            <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>">
+                                <%= team[:league] %>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <%= team[:points] %>
+                        <span class="text-small text-bold text-green-dark">+<%= team[:week_points] %></span>
+                    </div>
+                </div>
+                
+            </div>
+        <% end %>
+    </div>
+    <h1 class="text-center margin-top-2x">Remaining Seeds</h1>
     <table class="uniformTable tight-more">
         <tr>
             <th>Rank</th>
@@ -12,9 +48,81 @@
             <th>Week <%= @week_number %></th>
             <th>League</th>
         </tr>
-        <% @standings.each_with_index do |team, i| %>
+        <% @standings.first(8).each_with_index do |team, i| %>
             <tr>
-                <td class="text-bold text-2x text-right"><%= i+1 %></td>
+                <td class="text-bold text-2x text-right"><%= i+5 %></td>
+                <td>
+                    <div class="uniformThumb round overflow-hidden width-30-px height-30-px">
+                        <img src="<%= team[:logo] %>">
+                    </div>
+                </td>
+                <td>
+                    <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>/<%= team[:id] %>">
+                    <%= team[:name] %>
+                    </a>
+                </td>
+                <td><%= team[:manager] %>
+                <td><%= team[:points] %></td>
+                <td class="text-small text-bold text-green-dark">+<%= team[:week_points] %></td>
+                <td>
+                    <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>">
+                        <%= team[:league] %>
+                    </a>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+    
+    <h1 class="text-center margin-top-2x">On the Bubble</h1>
+    <table class="uniformTable tight-more">
+        <tr>
+            <th>Rank</th>
+            <th> </th>
+            <th>Team</th>
+            <th>Manager</th>
+            <th>Season Total</th>
+            <th>Week <%= @week_number %></th>
+            <th>League</th>
+        </tr>
+        <% @standings[8..11].each_with_index do |team, i| %>
+            <tr>
+                <td class="text-bold text-2x text-right"><%= i+13 %></td>
+                <td>
+                    <div class="uniformThumb round overflow-hidden width-30-px height-30-px">
+                        <img src="<%= team[:logo] %>">
+                    </div>
+                </td>
+                <td>
+                    <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>/<%= team[:id] %>">
+                    <%= team[:name] %>
+                    </a>
+                </td>
+                <td><%= team[:manager] %>
+                <td><%= team[:points] %></td>
+                <td class="text-small text-bold text-green-dark">+<%= team[:week_points] %></td>
+                <td>
+                    <a class="text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>">
+                        <%= team[:league] %>
+                    </a>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+    
+    <h1 class="text-center margin-top-2x">The Field</h1>
+    <table class="uniformTable tight-more">
+        <tr>
+            <th>Rank</th>
+            <th> </th>
+            <th>Team</th>
+            <th>Manager</th>
+            <th>Season Total</th>
+            <th>Week <%= @week_number %></th>
+            <th>League</th>
+        </tr>
+        <% @standings[12..-1].each_with_index do |team, i| %>
+            <tr>
+                <td class="text-bold text-2x text-right"><%= i+17 %></td>
                 <td>
                     <div class="uniformThumb round overflow-hidden width-30-px height-30-px">
                         <img src="<%= team[:logo] %>">

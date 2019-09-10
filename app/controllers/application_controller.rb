@@ -36,6 +36,7 @@ class ApplicationController < ActionController::Base
     @data = Hash.from_xml(response)
     
     @week_number = 0;
+    @ones = [];
     @standings = @data['fantasy_content']['leagues']['league'].map do |league|
       teams = league['standings']['teams']["team"].map do |team|
         {
@@ -55,8 +56,13 @@ class ApplicationController < ActionController::Base
           t[:week_points] = team['team_points']['total'].to_f
         end
       end
+      one_seed_id = league['standings']['teams']["team"][0]["team_id"]
+      @ones << teams.find{|x| x[:id] == one_seed_id}
+      teams.reject!{|x| x[:id] == one_seed_id}
+      
       teams
-    end.flatten.sort_by{|x| x[:points]}.reverse
+    end.flatten.sort_by{|x| [x[:points], x[:week_points]]}.reverse
+    
   end
   
   def raw
