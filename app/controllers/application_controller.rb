@@ -56,9 +56,10 @@ class ApplicationController < ActionController::Base
           t[:week_points] = team['team_points']['total'].to_f
         end
       end
-      one_seed_id = league['standings']['teams']["team"][0]["team_id"]
-      @ones << teams.find{|x| x[:id] == one_seed_id}
-      teams.reject!{|x| x[:id] == one_seed_id}
+      
+      one_seed = teams.sort_by{|x| [x[:points], x[:week_points]]}.reverse.first
+      @ones << one_seed
+      teams.reject!{|x| x == one_seed}
       
       teams
     end.flatten.sort_by{|x| [x[:points], x[:week_points]]}.reverse
@@ -126,9 +127,6 @@ class ApplicationController < ActionController::Base
         manager.try(:[], 'nickname')
       end
       names -= ["Knotel"]
-      puts "*"*80
-      puts names.inspect, names.include?("--hidden--")
-      puts "*"*80
       
       return mapping["#{league["league_id"]}.#{team["team_id"]}".to_sym] || '--hidden--' if names.include?("--hidden--")
       names.join(", ")

@@ -3,8 +3,11 @@
         <%= image_tag('logo.png', class:'inline-block width-200-px height-auto') %>
     </div>
     
-    <h1 class="margin-none text-center">#1 Seeds</h1>
-    <div class="grid grid-nest">
+    <h1 class="text-center margin-none">#1 Seeds</h1>
+    <div class="text-center margin-bottom text-gray-dark">
+        #1 Seed goes to most points scored for each league
+    </div>
+    <div class="grid grid-nest margin-bottom-2x">
         <% @ones.each_with_index do |team, i| %>
             <div class="col-6 col-12-sm">
                 <div class="grid uniformCard pad-v">
@@ -37,7 +40,10 @@
             </div>
         <% end %>
     </div>
-    <h1 class="text-center margin-top-2x">Remaining Seeds</h1>
+    <h1 class="text-center margin-none">Remaining Seeds</h1>
+    <div class="text-center margin-bottom text-gray-dark">
+        Remaining 8 seeds are given to most points scored across all of the super leage
+    </div>
     <table class="uniformTable tight-more">
         <tr>
             <th>Rank</th>
