@@ -2,7 +2,95 @@ class ApplicationController < ActionController::Base
 
   before_action :set_root_url
   before_action :set_access_token
-
+  
+  def index
+    if Date.today >= Date.parse('2019-11-26')
+      redirect_to :bracket
+    else
+      redirect_to :standings
+    end
+  end
+  
+  def bracket
+    standings
+    
+    @bracket = ]
+      [standings[0]],
+      [standings[7], standings[11]],
+      [standings[8], standings[10]],
+      [standings[4]],
+      [standings[2]],
+      [standings[5], standings[11]],
+      [standings[6], standings[10]],
+      [standings[3]]
+    ]
+    
+    # # TODO look up points via matchups, check that matchups load week 14
+#     if @week_number >= 13
+#       @standings.first(12).each do |team|
+#         (@week_number .. 16).each do|week_number|
+#
+#           response = Yahoo.get("/team/390.l.#{team[:league_id]}.t.#{team[:id]}/roster;weeks=#{week_number}", session[:access_token]);
+#           @data = Hash.from_xml(response)
+#           team[:scores] ||= {}
+#           team[:scores][week_number] = {
+#             projected_points: 0,
+#             actual_points: 0,
+#             roster: []
+#           }
+#           @data["team"]["roster"]["players"]["player"].each do |player|
+#             team[:scores][week_number][:roster] << {
+#               name: player["name"]["full"],
+#               image: player["image_url"]
+#             }
+#           end
+#         end
+#       end
+#     end
+  end
+  
+  def standings
+    # TODO switch to matchup totalling because standings will include week 13 and super goes through 12
+    response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")};out=standings,scoreboard", session[:access_token]);
+    @data = Hash.from_xml(response)
+    
+    @week_number = 0;
+    @ones = [];
+    @standings = @data['fantasy_content']['leagues']['league'].map do |league|
+      teams = league['standings']['teams']["team"].map do |team|
+        {
+          name: team['name'],
+          logo: team['team_logos']['team_logo']['url'],
+          id: team['team_id'],
+          league_id: league['league_id'],
+          league: league['name'],
+          points: team['team_points']['total'].to_f,
+          manager: manager(team, league)
+        }
+      end
+      @week_number = league['current_week'].to_i
+      league['scoreboard']['matchups']['matchup'].each do |matchup|
+        matchup['teams']['team'].each do |team|
+          t = teams.find{|x| x[:id] == team["team_id"]}
+          t[:week_points] = team['team_points']['total'].to_f
+        end
+      end
+      
+      one_seed = teams.sort_by{|x| [x[:points], x[:week_points]]}.reverse.first
+      @ones << one_seed
+      teams.reject!{|x| x == one_seed}
+      
+      teams
+    end.flatten.sort_by{|x| [x[:points], x[:week_points]]}.reverse
+    
+  end
+  
+  def debug
+    response = Yahoo.get("/team/390.l.1101180.t.1/roster;week=5;out=players", session[:access_token]);
+    @data = Hash.from_xml(response)
+    render json: @data
+  end
+  
   def set_root_url
     Rails.application.config.root_url = root_url
   end
@@ -30,45 +118,8 @@ class ApplicationController < ActionController::Base
     redirect_to Yahoo.oauth_url
   end
   
-  def index
-    leagues = %w(1101180 829718 1057144 808962)
-    response = Yahoo.get("/leagues;league_keys=#{leagues.map{|x| "390.l.#{x}"}.join(",")};out=standings,scoreboard", session[:access_token]);
-    @data = Hash.from_xml(response)
-    
-    @week_number = 0;
-    @ones = [];
-    @standings = @data['fantasy_content']['leagues']['league'].map do |league|
-      teams = league['standings']['teams']["team"].map do |team|
-        {
-          name: team['name'],
-          logo: team['team_logos']['team_logo']['url'],
-          id: team['team_id'],
-          league_id: league['league_id'],
-          league: league['name'],
-          points: team['team_points']['total'].to_f,
-          manager: manager(team, league)
-        }
-      end
-      @week_number = league['scoreboard']['week']
-      league['scoreboard']['matchups']['matchup'].each do |matchup|
-        matchup['teams']['team'].each do |team|
-          t = teams.find{|x| x[:id] == team["team_id"]}
-          t[:week_points] = team['team_points']['total'].to_f
-        end
-      end
-      
-      one_seed = teams.sort_by{|x| [x[:points], x[:week_points]]}.reverse.first
-      @ones << one_seed
-      teams.reject!{|x| x == one_seed}
-      
-      teams
-    end.flatten.sort_by{|x| [x[:points], x[:week_points]]}.reverse
-    
-  end
-  
-  def raw
-    index
-    render json: @data
+  def league_ids
+    %w(1101180 829718 1057144 808962)
   end
   
   def manager(team, league)
