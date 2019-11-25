@@ -13,50 +13,52 @@ class ApplicationController < ActionController::Base
   
   def bracket
     standings
+    
     @standings = @ones + @standings
     @standings.each_with_index do |team, index|
       team[:seed] = index + 1
     end
+    
     @octo_finals = [
       [
         {
           team: @standings[7],
           points: @standings[7][:weekly_points][12],
-          projected_points: @standings[4][:weekly_projected_points][12]
-        },{
-          team: @standings[8],
-          points: @standings[8][:weekly_points][12],
-          projected_points: @standings[11][:weekly_projected_points][12]
-        },
-      ],[
-        {
-          team: @standings[4],
-          points: @standings[7][:weekly_points][12],
           projected_points: @standings[7][:weekly_projected_points][12]
         },{
-          team: @standings[11],
+          team: @standings[8],
           points: @standings[8][:weekly_points][12],
           projected_points: @standings[8][:weekly_projected_points][12]
         },
       ],[
         {
+          team: @standings[4],
+          points: @standings[4][:weekly_points][12],
+          projected_points: @standings[4][:weekly_projected_points][12]
+        },{
+          team: @standings[11],
+          points: @standings[11][:weekly_points][12],
+          projected_points: @standings[11][:weekly_projected_points][12]
+        },
+      ],[
+        {
           team: @standings[5],
-          points: @standings[6][:weekly_points][12],
-          projected_points: @standings[6][:weekly_projected_points][12]
+          points: @standings[5][:weekly_points][12],
+          projected_points: @standings[5][:weekly_projected_points][12]
         },{
           team: @standings[10],
-          points: @standings[9][:weekly_points][12],
-          projected_points: @standings[9][:weekly_projected_points][12]
+          points: @standings[10][:weekly_points][12],
+          projected_points: @standings[10][:weekly_projected_points][12]
         },
       ],[
         {
           team: @standings[6],
-          points: @standings[5][:weekly_points][12],
-          projected_points: @standings[5][:weekly_projected_points][12]
+          points: @standings[6][:weekly_points][12],
+          projected_points: @standings[6][:weekly_projected_points][12]
         },{
           team: @standings[9],
-          points: @standings[10][:weekly_points][12],
-          projected_points: @standings[10][:weekly_projected_points][12]
+          points: @standings[9][:weekly_points][12],
+          projected_points: @standings[9][:weekly_projected_points][12]
         },
       ]
     ]
@@ -67,75 +69,75 @@ class ApplicationController < ActionController::Base
           team: @standings[0],
           points: @standings[0][:weekly_points][13],
           projected_points: @standings[0][:weekly_projected_points][13]
-        }, @week_number > 12 ? {
-          team: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
-          points: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
-          projected_points: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        }, @week_number > 13 ? {
+          team: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
         } : nil,
       ],[
         {
           team: @standings[3],
           points: @standings[3][:weekly_points][13],
           projected_points: @standings[1][:weekly_projected_points][13]
-        }, @week_number > 12 ? {
-          team: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team],
-          points: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
-          projected_points: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        }, @week_number > 13 ? {
+          team: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
         } : nil,
       ],[
         {
           team: @standings[2],
           points: @standings[2][:weekly_points][13],
           projected_points: @standings[2][:weekly_projected_points][13]
-        }, @week_number > 12 ? {
-          team: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team],
-          points: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
-          projected_points: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        }, @week_number > 13 ? {
+          team: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
         } : nil,
       ],[
         {
           team: @standings[1],
           points: @standings[1][:weekly_points][13],
           projected_points: @standings[3][:weekly_projected_points][13]
-        }, @week_number > 12 ? {
-          team: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
-          points: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
-          projected_points: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        }, @week_number > 13 ? {
+          team: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
         } : nil,
       ]
     ]
     
     @semi_finals = [
       [
-        @week_number > 13 ? {
+        @week_number > 14 ? {
           team: @quarter_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
           points: @quarter_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
           projected_points: @quarter_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
-        } : nil, @week_number > 13 ? {
-          team: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team],
-          points: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
-          projected_points: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
-        } : nil,
-      ], [
-        @week_number > 13 ? {
+        } : nil, @week_number > 14 ? {
           team: @quarter_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
           points: @quarter_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
           projected_points: @quarter_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
-        } : nil, @week_number > 13 ? {
+        } : nil,
+      ], [
+        @week_number > 14 ? {
           team: @quarter_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team],
           points: @quarter_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
           projected_points: @quarter_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
+        } : nil, @week_number > 14 ? {
+          team: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
+          projected_points: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
         } : nil,
       ]
     ]
     
     @finals = [
       [
-        @week_number > 14 ? {
+        @week_number > 15 ? {
           team: @semi_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
           points: @semi_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
           projected_points: @semi_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],
-        } : nil, @week_number > 14 ? {
+        } : nil, @week_number > 15 ? {
           team: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
           points: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
           projected_points: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],

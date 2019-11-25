@@ -10,7 +10,7 @@
                 Week <%= index + 13 %>
             </div>
             <% matchups.each do |matchup| %>
-                <div class="margin-v-4x">
+                <div class="margin-v-2x">
                     <% matchup.each do |matchup_side| %>
                         <%= render partial: 'matchup_side', locals: {
                             matchup_side: matchup_side,

@@ -1,9 +1,10 @@
 <% if matchup_side %>
-<% if week_number < current_week_number %>
-<% color = matchup.max{|a, b| a.try(:[], :points) <=> b.try(:[], :points)}.try(:[], :team).try(:[], :team_id) == team[:team_id] ? "#97c848" : "#cc2b27" %>
-<% end %>
 <% team = matchup_side[:team] %>
-<div class="grid grid-gutter-half pad-v-half bg-white rounded margin-v-half border" style="border-left-width: 6px; <%= color ? "border-left-color:#{color}" : "" %>">
+<% if week_number < current_week_number %>
+<% winner = matchup.max{|a, b| a.try(:[], :points) <=> b.try(:[], :points)} %>
+<% is_winner = winner.try(:[], :team).try(:[], :id) == team[:id] && winner.try(:[], :team).try(:[], :league_id) == team[:league_id] %>
+<% end %>
+<div class="grid grid-gutter-half pad-v-half bg-white rounded margin-v-half border <%= is_winner == false ? "opacity-50" : "" %>" style="border-left-width: 6px; <%= is_winner ? "border-left-color:#97c848" : "" %>">
     <div class="col text-gray-dark width-25-px">
         <%= team[:seed] %>
     </div>
@@ -23,7 +24,7 @@
         </div>
     </div>
     <div class="col">
-        <div class="<%= week_number < current_week_number ? "text-bold" : "" %>" style="<%= week_number < current_week_number ? "color: #{color}" : "" %>">
+        <div class="<%= week_number < current_week_number ? "text-bold" : "" %> <%= is_winner ? "text-green" : "" %>">
             <%= matchup_side[:points] %>
         </div>
         <div class="text-italic text-small text-gray-dark">
