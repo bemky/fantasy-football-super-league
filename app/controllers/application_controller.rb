@@ -13,81 +13,194 @@ class ApplicationController < ActionController::Base
   
   def bracket
     standings
-    
-    @bracket = ]
-      [standings[0]],
-      [standings[7], standings[11]],
-      [standings[8], standings[10]],
-      [standings[4]],
-      [standings[2]],
-      [standings[5], standings[11]],
-      [standings[6], standings[10]],
-      [standings[3]]
+    @standings = @ones + @standings
+    @standings.each_with_index do |team, index|
+      team[:seed] = index + 1
+    end
+    @octo_finals = [
+      [
+        {
+          team: @standings[4],
+          points: @standings[4][:weekly_points][12],
+          projected_points: @standings[4][:weekly_projected_points][12]
+        },{
+          team: @standings[11],
+          points: @standings[11][:weekly_points][12],
+          projected_points: @standings[11][:weekly_projected_points][12]
+        },
+      ],[
+        {
+          team: @standings[7],
+          points: @standings[7][:weekly_points][12],
+          projected_points: @standings[7][:weekly_projected_points][12]
+        },{
+          team: @standings[8],
+          points: @standings[8][:weekly_points][12],
+          projected_points: @standings[8][:weekly_projected_points][12]
+        },
+      ],[
+        {
+          team: @standings[6],
+          points: @standings[6][:weekly_points][12],
+          projected_points: @standings[6][:weekly_projected_points][12]
+        },{
+          team: @standings[9],
+          points: @standings[9][:weekly_points][12],
+          projected_points: @standings[9][:weekly_projected_points][12]
+        },
+      ],[
+        {
+          team: @standings[5],
+          points: @standings[5][:weekly_points][12],
+          projected_points: @standings[5][:weekly_projected_points][12]
+        },{
+          team: @standings[10],
+          points: @standings[10][:weekly_points][12],
+          projected_points: @standings[10][:weekly_projected_points][12]
+        },
+      ]
     ]
     
-    # # TODO look up points via matchups, check that matchups load week 14
-#     if @week_number >= 13
-#       @standings.first(12).each do |team|
-#         (@week_number .. 16).each do|week_number|
-#
-#           response = Yahoo.get("/team/390.l.#{team[:league_id]}.t.#{team[:id]}/roster;weeks=#{week_number}", session[:access_token]);
-#           @data = Hash.from_xml(response)
-#           team[:scores] ||= {}
-#           team[:scores][week_number] = {
-#             projected_points: 0,
-#             actual_points: 0,
-#             roster: []
-#           }
-#           @data["team"]["roster"]["players"]["player"].each do |player|
-#             team[:scores][week_number][:roster] << {
-#               name: player["name"]["full"],
-#               image: player["image_url"]
-#             }
-#           end
-#         end
-#       end
-#     end
+    @quarter_finals = [
+      [
+        {
+          team: @standings[0],
+          points: @standings[0][:weekly_points][13],
+          projected_points: @standings[0][:weekly_projected_points][13]
+        }, @week_number > 12 ? {
+          team: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        } : nil,
+      ],[
+        {
+          team: @standings[3],
+          points: @standings[3][:weekly_points][13],
+          projected_points: @standings[1][:weekly_projected_points][13]
+        }, @week_number > 12 ? {
+          team: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        } : nil,
+      ],[
+        {
+          team: @standings[2],
+          points: @standings[2][:weekly_points][13],
+          projected_points: @standings[2][:weekly_projected_points][13]
+        }, @week_number > 12 ? {
+          team: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        } : nil,
+      ],[
+        {
+          team: @standings[1],
+          points: @standings[1][:weekly_points][13],
+          projected_points: @standings[3][:weekly_projected_points][13]
+        }, @week_number > 12 ? {
+          team: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][13],
+          projected_points: @octo_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][13],
+        } : nil,
+      ]
+    ]
+    
+    @semi_finals = [
+      [
+        @week_number > 13 ? {
+          team: @quarter_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @quarter_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
+          projected_points: @quarter_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
+        } : nil, @week_number > 13 ? {
+          team: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
+          projected_points: @quarter_finals[3].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
+        } : nil,
+      ], [
+        @week_number > 13 ? {
+          team: @quarter_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @quarter_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
+          projected_points: @quarter_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
+        } : nil, @week_number > 13 ? {
+          team: @quarter_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @quarter_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][14],
+          projected_points: @quarter_finals[2].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][14],
+        } : nil,
+      ]
+    ]
+    
+    @finals = [
+      [
+        @week_number > 14 ? {
+          team: @semi_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @semi_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
+          projected_points: @semi_finals[0].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],
+        } : nil, @week_number > 14 ? {
+          team: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
+          projected_points: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],
+        } : nil,
+      ]
+    ]
   end
   
   def standings
-    # TODO switch to matchup totalling because standings will include week 13 and super goes through 12
-    response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")};out=standings,scoreboard", session[:access_token]);
+    response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")}/teams/matchups", session[:access_token]);
     @data = Hash.from_xml(response)
     
     @week_number = 0;
     @ones = [];
     @standings = @data['fantasy_content']['leagues']['league'].map do |league|
-      teams = league['standings']['teams']["team"].map do |team|
+      @week_number = league['current_week'].to_i
+
+      teams = league['teams']["team"].map do |team|
+        points = team['matchups']['matchup'].map do |x|
+          points = x['teams']['team'].find{|x| x['team_id'] == team["team_id"]}['team_points']['total'].to_f
+          week = x['week'].to_i
+          week >= @week_number || week > 12 ? 0 : points
+        end
+        points = points.sum
+
+        current_matchup = team['matchups']['matchup'].find{|x| x['week'].to_i == @week_number}
+        week_points = current_matchup['teams']['team'].find{|x| x['team_id'] == team['team_id']}['team_points']['total'].to_f if @week_number < 13
+        weekly_points = team['matchups']['matchup'].map do |x|
+          x['teams']['team'].find{ |x| x['team_id'] == team["team_id"] }['team_points']['total'].to_f
+        end
+        weekly_projected_points = team['matchups']['matchup'].map do |x|
+          x['teams']['team'].find{ |x| x['team_id'] == team["team_id"] }['team_projected_points']['total'].to_f
+        end
         {
           name: team['name'],
           logo: team['team_logos']['team_logo']['url'],
           id: team['team_id'],
           league_id: league['league_id'],
           league: league['name'],
-          points: team['team_points']['total'].to_f,
-          manager: manager(team, league)
+          points: points,
+          week_points: week_points,
+          manager: manager(team, league),
+          weekly_points: weekly_points,
+          weekly_projected_points: weekly_projected_points
         }
       end
-      @week_number = league['current_week'].to_i
-      league['scoreboard']['matchups']['matchup'].each do |matchup|
-        matchup['teams']['team'].each do |team|
-          t = teams.find{|x| x[:id] == team["team_id"]}
-          t[:week_points] = team['team_points']['total'].to_f
-        end
-      end
-      
+
       one_seed = teams.sort_by{|x| [x[:points], x[:week_points]]}.reverse.first
       @ones << one_seed
       teams.reject!{|x| x == one_seed}
-      
+
       teams
     end.flatten.sort_by{|x| [x[:points], x[:week_points]]}.reverse
+    @ones = @ones.sort_by{|x| [x[:points], x[:week_points]]}.reverse
     
   end
   
   def debug
-    response = Yahoo.get("/team/390.l.1101180.t.1/roster;week=5;out=players", session[:access_token]);
+    # response = Yahoo.get("/teams;team_keys=390.l.1101180.t.1/matchups;weeks=11,16", session[:access_token]);
+    # response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")}/teams/matchups", session[:access_token]);
+    # @data = Hash.from_xml(response)
+    
+    response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")}/teams/matchups", session[:access_token]);
     @data = Hash.from_xml(response)
+
     render json: @data
   end
   
@@ -186,6 +299,10 @@ class ApplicationController < ActionController::Base
       return mapping["#{league["league_id"]}.#{team["team_id"]}".to_sym] || '--hidden--' if name == "--hidden--"
       name
     end
+  end
+  
+  def get_bracket(seeds)
+    
   end
   
 end

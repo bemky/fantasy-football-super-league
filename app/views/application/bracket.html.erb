@@ -1,5 +1,20 @@
-<div class="bracket">
-    <% @bracket.each do |matchup| %>
-        
+<div class="grid grid-center grid-h-center">
+    <% [
+        @octo_finals,
+        @quarter_finals,
+        @semi_finals,
+        @finals
+    ].each_with_index do |matchups, index| %>
+        <div class="col">
+            <div class="text-bold text-center">
+                Week <%= index + 13 %>
+            </div>
+            <% matchups.each do |matchup| %>
+                <%= render partial: 'matchup', locals: {matchup: matchup} %>
+            <% end %>
+            <div class="text-bold text-center">
+                &nbsp;
+            </div>
+        </div>
     <% end %>
 </div>

@@ -57,7 +57,7 @@ body{
 
 .bracket{
     display: grid;
-    grid-template-areas: "quarters-left semis-left finals semis-right quarters-right";
+    grid-template-areas: "quarters semis finals";
     grid-auto-flow: row dense;
     .matchup{
         display: block;
