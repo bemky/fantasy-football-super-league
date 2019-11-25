@@ -10,7 +10,16 @@
                 Week <%= index + 13 %>
             </div>
             <% matchups.each do |matchup| %>
-                <%= render partial: 'matchup', locals: {matchup: matchup} %>
+                <div class="margin-v-4x">
+                    <% matchup.each do |matchup_side| %>
+                        <%= render partial: 'matchup_side', locals: {
+                            matchup_side: matchup_side,
+                            matchup: matchup,
+                            week_number: index + 13,
+                            current_week_number: @week_number
+                        } %>
+                    <% end %>
+                </div>
             <% end %>
             <div class="text-bold text-center">
                 &nbsp;

@@ -1,0 +1,46 @@
+<% if matchup_side %>
+<% if week_number < current_week_number %>
+<% color = matchup.max{|a, b| a.try(:[], :points) <=> b.try(:[], :points)}.try(:[], :team).try(:[], :team_id) == team[:team_id] ? "#97c848" : "#cc2b27" %>
+<% end %>
+<% team = matchup_side[:team] %>
+<div class="grid grid-gutter-half pad-v-half bg-white rounded margin-v-half border" style="border-left-width: 6px; <%= color ? "border-left-color:#{color}" : "" %>">
+    <div class="col text-gray-dark width-25-px">
+        <%= team[:seed] %>
+    </div>
+    <div class="col">
+        <div class="uniformThumb round overflow-hidden width-40-px height-40-px">
+            <img src="<%= team[:logo] %>">
+        </div>
+    </div>
+    <div class="col-fill">
+        <div class="">
+            <a class="text-bold block text-gray-darkest hover-blue text-no-decoration" href="https://football.fantasysports.yahoo.com/f1/<%= team[:league_id] %>/<%= team[:id] %>">
+                <%= team[:name] %>
+            </a>
+            <div class="text-gray-dark text-small">
+                <%= team[:manager] %>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="<%= week_number < current_week_number ? "text-bold" : "" %>" style="<%= week_number < current_week_number ? "color: #{color}" : "" %>">
+            <%= matchup_side[:points] %>
+        </div>
+        <div class="text-italic text-small text-gray-dark">
+            <%= matchup_side[:projected_points] %>
+        </div>
+    </div>
+</div>
+<% else %>
+<div class="grid pad-v-half bg-white rounded margin-v-half border" style="border-left-width: 6px;">
+    <div class="col text-gray-dark width-15-px"></div>
+    <div class="col">
+        <div class="uniformThumb round bg-gray-light overflow-hidden width-40-px height-40-px">
+        </div>
+    </div>
+    <div class="col-fill text-bold">
+        &mdash;
+    </div>
+</div>
+    
+<% end %>

@@ -20,41 +20,41 @@ class ApplicationController < ActionController::Base
     @octo_finals = [
       [
         {
-          team: @standings[4],
-          points: @standings[4][:weekly_points][12],
+          team: @standings[7],
+          points: @standings[7][:weekly_points][12],
           projected_points: @standings[4][:weekly_projected_points][12]
         },{
-          team: @standings[11],
-          points: @standings[11][:weekly_points][12],
+          team: @standings[8],
+          points: @standings[8][:weekly_points][12],
           projected_points: @standings[11][:weekly_projected_points][12]
         },
       ],[
         {
-          team: @standings[7],
+          team: @standings[4],
           points: @standings[7][:weekly_points][12],
           projected_points: @standings[7][:weekly_projected_points][12]
         },{
-          team: @standings[8],
+          team: @standings[11],
           points: @standings[8][:weekly_points][12],
           projected_points: @standings[8][:weekly_projected_points][12]
         },
       ],[
         {
-          team: @standings[6],
+          team: @standings[5],
           points: @standings[6][:weekly_points][12],
           projected_points: @standings[6][:weekly_projected_points][12]
         },{
-          team: @standings[9],
+          team: @standings[10],
           points: @standings[9][:weekly_points][12],
           projected_points: @standings[9][:weekly_projected_points][12]
         },
       ],[
         {
-          team: @standings[5],
+          team: @standings[6],
           points: @standings[5][:weekly_points][12],
           projected_points: @standings[5][:weekly_projected_points][12]
         },{
-          team: @standings[10],
+          team: @standings[9],
           points: @standings[10][:weekly_points][12],
           projected_points: @standings[10][:weekly_projected_points][12]
         },
