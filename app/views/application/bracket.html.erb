@@ -2,8 +2,7 @@
     <% [
         @octo_finals,
         @quarter_finals,
-        @semi_finals,
-        @finals
+        @semi_finals
     ].each_with_index do |matchups, index| %>
         <div class="col">
             <div class="text-bold text-center">
@@ -26,4 +25,40 @@
             </div>
         </div>
     <% end %>
+    
+    <div class="col">
+        <div class="text-bold text-center">
+            Week 16
+        </div>
+        <div class="text-bold text-center">
+            Finals
+        </div>
+        <div class="margin-v-2x">
+            <% @finals[0].each do |matchup_side| %>
+                <%= render partial: 'matchup_side', locals: {
+                    matchup_side: matchup_side,
+                    matchup: @finals[0],
+                    week_number: 16,
+                    current_week_number: @week_number
+                } %>
+            <% end %>
+        </div>
+        
+        <div class="text-bold text-center">
+            Consolation
+        </div>
+        <div class="margin-v-2x">
+            <% @finals[1].each do |matchup_side| %>
+                <%= render partial: 'matchup_side', locals: {
+                    matchup_side: matchup_side,
+                    matchup: @finals[1],
+                    week_number: 16,
+                    current_week_number: @week_number
+                } %>
+            <% end %>
+        </div>
+        <div class="text-bold text-center">
+            &nbsp;
+        </div>
+    </div>
 </div>

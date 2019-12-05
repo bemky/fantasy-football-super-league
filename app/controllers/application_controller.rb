@@ -141,19 +141,35 @@ class ApplicationController < ActionController::Base
           team: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team],
           points: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
           projected_points: @semi_finals[1].max{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],
-        } : nil,
+        } : nil
+      ], [
+        @week_number > 15 ? {
+          team: @semi_finals[0].min{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @semi_finals[0].min{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
+          projected_points: @semi_finals[0].min{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],
+        } : nil, @week_number > 15 ? {
+          team: @semi_finals[1].min{|a, b| a[:points] <=> b[:points]}[:team],
+          points: @semi_finals[1].min{|a, b| a[:points] <=> b[:points]}[:team][:weekly_points][15],
+          projected_points: @semi_finals[1].min{|a, b| a[:points] <=> b[:points]}[:team][:weekly_projected_points][15],
+        } : nil
       ]
     ]
   end
   
   def standings
-    response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")}/teams/matchups", session[:access_token]);
+    response = Yahoo.get("/leagues;league_keys=#{league_ids}/teams/matchups", session[:access_token]);
     @data = Hash.from_xml(response)
+    
+    week_data = []
+    week_data[13] = Hash.from_xml(Yahoo.get("/leagues;league_keys=#{league_ids}/teams/stats;type=week;week=14", session[:access_token]))
+    week_data[14] = Hash.from_xml(Yahoo.get("/leagues;league_keys=#{league_ids}/teams/stats;type=week;week=15", session[:access_token]))
+    week_data[15] = Hash.from_xml(Yahoo.get("/leagues;league_keys=#{league_ids}/teams/stats;type=week;week=16", session[:access_token]))
     
     @week_number = 0;
     @ones = [];
     @standings = @data['fantasy_content']['leagues']['league'].map do |league|
       @week_number = league['current_week'].to_i
+      @week_number = 17 if league['is_finished'] == "1"
 
       teams = league['teams']["team"].map do |team|
         points = team['matchups']['matchup'].map do |x|
@@ -165,12 +181,25 @@ class ApplicationController < ActionController::Base
 
         current_matchup = team['matchups']['matchup'].find{|x| x['week'].to_i == @week_number}
         week_points = current_matchup['teams']['team'].find{|x| x['team_id'] == team['team_id']}['team_points']['total'].to_f if @week_number < 13
-        weekly_points = team['matchups']['matchup'].map do |x|
-          x['teams']['team'].find{ |x| x['team_id'] == team["team_id"] }['team_points']['total'].to_f
+        weekly_points = []
+        weekly_projected_points = []
+        team['matchups']['matchup'].each do |x|
+          weekly_points[x['week'].to_i - 1] = x['teams']['team'].find{ |x| x['team_id'] == team["team_id"] }['team_points']['total'].to_f
         end
+      
         weekly_projected_points = team['matchups']['matchup'].map do |x|
-          x['teams']['team'].find{ |x| x['team_id'] == team["team_id"] }['team_projected_points']['total'].to_f
+          weekly_projected_points[x['week'].to_i - 1] = x['teams']['team'].find{ |x| x['team_id'] == team["team_id"] }['team_projected_points']['total'].to_f
         end
+        
+        [weekly_points[13], weekly_points[14], weekly_points[15]].each_with_index do |v, i|
+          next if v
+          index = i + 13
+          league_data = week_data[index]['fantasy_content']['leagues']['league'].find{|x| x['league_id'] == league['league_id']}
+          team_data = league_data['teams']['team'].find{|x| x['team_id'] == team['team_id']}
+          weekly_points[index] = team_data['team_points']['total'].to_f
+          weekly_projected_points[index] = team_data['team_projected_points']['total'].to_f
+        end
+        
         {
           name: team['name'],
           logo: team['team_logos']['team_logo']['url'],
@@ -200,7 +229,7 @@ class ApplicationController < ActionController::Base
     # response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")}/teams/matchups", session[:access_token]);
     # @data = Hash.from_xml(response)
     
-    response = Yahoo.get("/leagues;league_keys=#{league_ids.map{|x| "390.l.#{x}"}.join(",")}/teams/matchups", session[:access_token]);
+    response = Yahoo.get("/leagues;league_keys=#{league_ids}/teams/stats;type=week;week=13", session[:access_token]);
     @data = Hash.from_xml(response)
 
     render json: @data
@@ -234,7 +263,8 @@ class ApplicationController < ActionController::Base
   end
   
   def league_ids
-    %w(1101180 829718 1057144 808962)
+    %w(1101180 829718 1057144 808962).map{|x| "390.l.#{x}"}.join(",")
+    # %w(1031939 144803).map{|x| "380.l.#{x}"}.join(",")
   end
   
   def manager(team, league)

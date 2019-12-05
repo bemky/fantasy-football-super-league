@@ -1,7 +1,7 @@
 <% if matchup_side %>
 <% team = matchup_side[:team] %>
 <% if week_number < current_week_number %>
-<% winner = matchup.max{|a, b| a.try(:[], :points) <=> b.try(:[], :points)} %>
+<% winner = (matchup[0][:points] || 0) > (matchup[1][:points] || 0) ? matchup[0] : matchup[1] %>
 <% is_winner = winner.try(:[], :team).try(:[], :id) == team[:id] && winner.try(:[], :team).try(:[], :league_id) == team[:league_id] %>
 <% end %>
 <div class="grid grid-gutter-half pad-v-half bg-white rounded margin-v-half border <%= is_winner == false ? "opacity-50" : "" %>" style="border-left-width: 6px; <%= is_winner ? "border-left-color:#97c848" : "" %>">
