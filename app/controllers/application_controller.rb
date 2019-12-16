@@ -245,11 +245,11 @@ class ApplicationController < ActionController::Base
     if session[:access_token] && session[:access_token_expires_at] <= Time.now
       response = Yahoo.authenticate(refresh_token: session[:refresh_token], grant_type: 'refresh_token')
       if response
-        session.delete(:access_token)
-      else
         session[:access_token]             = response["access_token"]
         session[:access_token_expires_at]  = start_time + response["expires_in"] - 30
         session[:refresh_token]            = response["refresh_token"]
+      else
+        session.delete(:access_token)
       end
     end
     if params[:code]
