@@ -131,7 +131,8 @@ class Yahoo < HTTP::Connection
           response = JSON.parse(response.body)
           return response
         else
-          raise RuntimeError, "Invalid response from Yahoo #{@oauth_url}; recieved #{response.code}"
+          return nil
+          # raise RuntimeError, "Invalid response from Yahoo #{@oauth_url}; recieved #{response.code}"
         end
       end
     end
